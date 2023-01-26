@@ -1,0 +1,44 @@
+name: "Runs md2cf"
+description: "Installs Python, Pip and md2cf and runs the md2cf command"
+
+inputs:
+  CONFLUENCE_HOST:
+    required: true
+    description: "The api endpoint of the Confluence Host"
+  CONFLUENCE_USERNAME:
+    required: true
+    description: "The username used for authentication towards the Confluence Host"
+  CONFLUENCE_PASSWORD:
+    required: true
+    description: "The password used for authentication towards the Confluence Host"
+  CONFLUENCE_SPACE:
+    required: true
+    description: "The Confluence space the documentation needs to be deployed towards"
+  CONFLUENCE_PARENT_PAGE_TITLE:
+    required: false
+    description: "The Confluence page that should act as parent for the documentation"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout Source
+      uses: actions/checkout@v3
+
+    - name: Setup Python-pip
+      shell: bash
+      run: |
+        sudo apt-get update > /dev/null
+        sudo apt-get install python3-pip -y
+    - name: Install md2cf
+      shell: bash
+      run: |
+        sudo pip install md2cf --upgrade
+    - name: Publish using md2cf
+      shell: bash
+      run: |
+        md2cf --host ${{ inputs.CONFLUENCE_HOST }} --username ${{ inputs.CONFLUENCE_USERNAME }} --password ${{ inputs.CONFLUENCE_PASSWORD }} \
+          ./docs \
+          --space ${{ inputs.CONFLUENCE_SPACE }} \
+          --parent-title '${{ inputs.CONFLUENCE_PARENT_PAGE_TITLE }}' \
+          --only-changed \
+          --strip-top-header

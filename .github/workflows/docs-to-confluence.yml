@@ -1,0 +1,24 @@
+name: Publish md files to Confluence
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/**"
+
+jobs:
+  publish-to-confluence:
+    runs-on: ubuntu-latest
+    environment: confluence
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deploy documentation
+        uses: ./.github/actions/md2cf
+        with:
+          CONFLUENCE_HOST: ${{ vars.CONFLUENCE_HOST }}
+          CONFLUENCE_USERNAME: ${{ secrets.CONFLUENCE_USER }}
+          CONFLUENCE_PASSWORD: ${{ secrets.CONFLUENCE_TOKEN }}
+          CONFLUENCE_SPACE: ${{ vars.CONFLUENCE_SPACE }}
+          CONFLUENCE_PARENT_PAGE_TITLE: "Docs-As-Code from GitHub"

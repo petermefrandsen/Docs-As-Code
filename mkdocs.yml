@@ -1,0 +1,9 @@
+site_name: MkDocs Deployment
+repo_url: https://github.com/petermefrandsen/mkdocs-deployment
+
+nav:
+  - Home: index.md
+  - Top level:
+      - Other Page: other-page.md
+      - More:
+          - sub page: more/sub-page.md
